@@ -1,8 +1,9 @@
 package snmp
 
 import (
-	"github.com/gosnmp/gosnmp"
 	"strconv"
+
+	"github.com/gosnmp/gosnmp"
 )
 
 type Result struct {
@@ -26,5 +27,10 @@ func (r Result) Uint() uint {
 }
 
 func (r Result) UintSlice() []uint {
-	return r.Data.Value.([]uint)
+	s := r.Data.Value.([]uint8)
+	result := make([]uint, 0, len(s))
+	for _, u := range s {
+		result = append(result, uint(u))
+	}
+	return result
 }

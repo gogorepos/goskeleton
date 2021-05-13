@@ -3,18 +3,18 @@ package snmp
 const (
 	// IfNumberOid [Get] 网络接口的数目
 	IfNumberOid = ".1.3.6.1.2.1.2.1.0"
-	// IfDescrOid [Walk] 网络接口信息描述
-	IfDescrOid = ".1.3.6.1.2.1.2.2.1.2"
+	// IfDescOid [Walk] 网络接口信息描述
+	IfDescOid = ".1.3.6.1.2.1.2.2.1.2"
 	// IfTypeOid [Walk] 网络接口类型
 	IfTypeOid = ".1.3.6.1.2.1.2.2.1.3"
 	// IfMTUOid [Walk] 接口发送和接收的最大 IP 数据报
 	IfMTUOid = ".1.3.6.1.2.1.2.2.1.4"
 	// IfSpeedOid [Walk] 接口当前宽带 bps
 	IfSpeedOid = ".1.3.6.1.2.1.2.2.1.5"
-	// IfPhysAddressOid [Walk] 接口的物理地址
-	IfPhysAddressOid = ".1.3.6.1.2.1.2.2.1.6"
-	// IfOperStatusOid [Walk] 接口当前操作状态
-	IfOperStatusOid = ".1.3.6.1.2.1.2.2.1.8"
+	// IfMacOid [Walk] 接口的物理地址
+	IfMacOid = ".1.3.6.1.2.1.2.2.1.6"
+	// IfStatusOid [Walk] 接口当前操作状态
+	IfStatusOid = ".1.3.6.1.2.1.2.2.1.8"
 	// IfInOctetOid [Walk] 接口收到的字节数
 	IfInOctetOid = ".1.3.6.1.2.1.2.2.1.10"
 	// IfOutOctetOid [Walk] 接口发送的字节数
@@ -39,3 +39,17 @@ const (
 	// IndexLocalDesOid [Get] 交换机某端口的本地端口描述
 	IndexLocalDesOid = "1.3.6.1.4.1.3320.127.1.3.7.1.4."
 )
+
+var OidMap = map[string]string{
+	"IfNumberOid":       ".1.3.6.1.2.1.2.1.0",
+	"IfDescOid":         ".1.3.6.1.2.1.2.2.1.2",
+	"IfTypeOid":         ".1.3.6.1.2.1.2.2.1.3",
+	"IfMTUOid":          ".1.3.6.1.2.1.2.2.1.4",
+	"IfSpeedOid":        ".1.3.6.1.2.1.2.2.1.5",
+	"IfMacOid":          ".1.3.6.1.2.1.2.2.1.6",
+	"IfStatusOid":       ".1.3.6.1.2.1.2.2.1.8",
+	"IfInOctetOid":      ".1.3.6.1.2.1.2.2.1.10",
+	"IfOutOctetOid":     ".1.3.6.1.2.1.2.2.1.16",
+	"IfInUcastPktsOid":  ".1.3.6.1.2.1.2.2.1.11",
+	"IfOutUcastPktsOid": ".1.3.6.1.2.1.2.2.1.17",
+}
