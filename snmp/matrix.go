@@ -1,19 +1,157 @@
 package snmp
 
+import (
+	"github.com/gogorepos/goskeleton/util/mac"
+	"sync"
+)
+
 type Switch struct {
 	LocalIP string // 本地 IP 地址
-	If      []If   // 接口
+	mu      sync.Mutex
+	IfUnit  []IfUnit // 接口
 }
 
-type If struct {
-	Description  string // 接口信息描述
-	Type         string // 接口类型
-	MTU          string // 发送和接受的最大 IP 数据报 byte
-	Speed        string // 带宽 bps
-	PhysAddress  string // 物理地址
-	Status       string // 操作状态
-	InOctet      string // 收到的字节数
-	OutOctet     string // 发送的字节数
-	InUcastPkts  string // 收到的数据包个数
-	OutUcastPkts string // 发送的数据包个数
+type IfUnit struct {
+	Description  string  // 接口信息描述
+	MTU          int     // 发送和接受的最大 IP 数据报 byte
+	Speed        uint    // 带宽 bps
+	PhysAddress  mac.Mac // MAC 地址
+	Status       int     // 操作状态
+	InOctet      uint    // 收到的字节数
+	OutOctet     uint    // 发送的字节数
+	InUcastPkts  uint    // 收到的数据包个数
+	OutUcastPkts uint    // 发送的数据包个数
+}
+
+func GetSwitch(ip string) (*Switch, error) {
+	s := Switch{LocalIP: ip, mu: sync.Mutex{}}
+	snmp := NewSNMP(ip)
+	if err := snmp.Connect(); err != nil {
+		return nil, err
+	}
+	defer snmp.Close()
+	num, err := snmp.Get(IfNumberOid)
+	if err != nil {
+		return nil, err
+	}
+	s.IfUnit = make([]IfUnit, num.Int())
+	go getIfDescr(snmp, &s)
+	go getIfMTU(snmp, &s)
+	go getIfMac(snmp, &s)
+	go getIfInOctet(snmp, &s)
+	go getIfOutOctet(snmp, &s)
+	go getIfInUcastPkts(snmp, &s)
+	go getIfOutUcastPkts(snmp, &s)
+	go getIfStatus(snmp, &s)
+	go getIfSpeed(snmp, &s)
+
+	return &s, nil
+}
+
+func getIfDescr(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfDescrOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].Description = result.String()
+		s.mu.Unlock()
+	}
+}
+
+func getIfStatus(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].Status = result.Int()
+		s.mu.Unlock()
+	}
+}
+
+func getIfMTU(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].MTU = result.Int()
+		s.mu.Unlock()
+	}
+}
+
+func getIfSpeed(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].Speed = result.Uint()
+		s.mu.Unlock()
+	}
+}
+
+func getIfInOctet(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].InOctet = result.Uint()
+		s.mu.Unlock()
+	}
+}
+
+func getIfOutOctet(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].OutOctet = result.Uint()
+		s.mu.Unlock()
+	}
+}
+
+func getIfInUcastPkts(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].InUcastPkts = result.Uint()
+		s.mu.Unlock()
+	}
+}
+
+func getIfOutUcastPkts(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfOperStatusOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].OutUcastPkts = result.Uint()
+		s.mu.Unlock()
+	}
+}
+
+func getIfMac(snmp *SNMP, s *Switch) {
+	r, err := snmp.Walk(IfPhysAddressOid)
+	if err != nil {
+		return
+	}
+	for i, result := range r {
+		s.mu.Lock()
+		s.IfUnit[i].PhysAddress = result.UintSlice()
+		s.mu.Unlock()
+	}
 }

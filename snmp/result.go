@@ -20,3 +20,11 @@ func (r Result) String() string {
 func (r Result) Int() int {
 	return r.Data.Value.(int)
 }
+
+func (r Result) Uint() uint {
+	return r.Data.Value.(uint)
+}
+
+func (r Result) UintSlice() []uint {
+	return r.Data.Value.([]uint)
+}
