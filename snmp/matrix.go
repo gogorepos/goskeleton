@@ -35,20 +35,24 @@ func GetSwitch(ip string) (*Switch, error) {
 		return nil, err
 	}
 	s.IfUnit = make([]IfUnit, num.Int())
-	go getIfDescr(snmp, &s)
-	go getIfMTU(snmp, &s)
-	go getIfMac(snmp, &s)
-	go getIfInOctet(snmp, &s)
-	go getIfOutOctet(snmp, &s)
-	go getIfInUcastPkts(snmp, &s)
-	go getIfOutUcastPkts(snmp, &s)
-	go getIfStatus(snmp, &s)
-	go getIfSpeed(snmp, &s)
 
+	wg := sync.WaitGroup{}
+	wg.Add(9)
+	go getIfDescr(snmp, &s, &wg)
+	go getIfMTU(snmp, &s, &wg)
+	go getIfMac(snmp, &s, &wg)
+	go getIfInOctet(snmp, &s, &wg)
+	go getIfOutOctet(snmp, &s, &wg)
+	go getIfInUcastPkts(snmp, &s, &wg)
+	go getIfOutUcastPkts(snmp, &s, &wg)
+	go getIfStatus(snmp, &s, &wg)
+	go getIfSpeed(snmp, &s, &wg)
+	wg.Wait()
 	return &s, nil
 }
 
-func getIfDescr(snmp *SNMP, s *Switch) {
+func getIfDescr(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfDescrOid)
 	if err != nil {
 		return
@@ -60,7 +64,8 @@ func getIfDescr(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfStatus(snmp *SNMP, s *Switch) {
+func getIfStatus(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -72,7 +77,8 @@ func getIfStatus(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfMTU(snmp *SNMP, s *Switch) {
+func getIfMTU(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -84,7 +90,8 @@ func getIfMTU(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfSpeed(snmp *SNMP, s *Switch) {
+func getIfSpeed(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -96,7 +103,8 @@ func getIfSpeed(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfInOctet(snmp *SNMP, s *Switch) {
+func getIfInOctet(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -108,7 +116,8 @@ func getIfInOctet(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfOutOctet(snmp *SNMP, s *Switch) {
+func getIfOutOctet(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -120,7 +129,8 @@ func getIfOutOctet(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfInUcastPkts(snmp *SNMP, s *Switch) {
+func getIfInUcastPkts(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -132,7 +142,8 @@ func getIfInUcastPkts(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfOutUcastPkts(snmp *SNMP, s *Switch) {
+func getIfOutUcastPkts(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfOperStatusOid)
 	if err != nil {
 		return
@@ -144,7 +155,8 @@ func getIfOutUcastPkts(snmp *SNMP, s *Switch) {
 	}
 }
 
-func getIfMac(snmp *SNMP, s *Switch) {
+func getIfMac(snmp *SNMP, s *Switch, wg *sync.WaitGroup) {
+	defer wg.Done()
 	r, err := snmp.Walk(IfPhysAddressOid)
 	if err != nil {
 		return
