@@ -12,7 +12,10 @@ const (
 	// IfSpeedOid [Walk] 接口当前宽带 bps
 	IfSpeedOid = ".1.3.6.1.2.1.2.2.1.5"
 	// IfMacOid [Walk] 接口的物理地址
-	IfMacOid = ".1.3.6.1.2.1.2.2.1.6"
+	// IfMacOid = ".1.3.6.1.2.1.2.2.1.6"
+	IfMacOid = "1.3.6.1.2.1.17.4.3.1.1"
+	// IfMacPortOid [BulkWalk] 接口地址对应端口
+	IfMacPortOid = ".1.3.6.1.2.1.17.4.3.1.2"
 	// IfStatusOid [Walk] 接口当前操作状态
 	IfStatusOid = ".1.3.6.1.2.1.2.2.1.8"
 	// IfInOctetOid [Walk] 接口收到的字节数
