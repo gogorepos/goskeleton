@@ -2,19 +2,18 @@ package snmp
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/gosnmp/gosnmp"
 )
 
 type SNMP struct {
-	snmp *gosnmp.GoSNMP
+	*gosnmp.GoSNMP
 }
 
 var NoneErr = errors.New("not result")
 
-func NewSNMP(ip string) *SNMP {
+func NewSNMP(ip string) (*SNMP, error) {
 	snmp := &gosnmp.GoSNMP{
 		Target:             ip,
 		Port:               161,
@@ -26,24 +25,17 @@ func NewSNMP(ip string) *SNMP {
 		ExponentialTimeout: true,
 		MaxOids:            gosnmp.MaxOids,
 	}
-	return &SNMP{snmp: snmp}
-}
-
-func (s *SNMP) Logger(logger *log.Logger) {
-	s.snmp.Logger = logger
-}
-
-func (s *SNMP) Connect() error {
-	return s.snmp.Connect()
+	err := snmp.Connect()
+	return &SNMP{snmp}, err
 }
 
 func (s *SNMP) Close() error {
-	return s.snmp.Conn.Close()
+	return s.Conn.Close()
 }
 
 func (s *SNMP) Get(oid string) (Result, error) {
 	oids := []string{oid}
-	p, err := s.snmp.Get(oids)
+	p, err := s.GoSNMP.Get(oids)
 	if err != nil {
 		return Result{}, err
 	}
@@ -51,7 +43,7 @@ func (s *SNMP) Get(oid string) (Result, error) {
 }
 
 func (s *SNMP) GetAll(oids []string) ([]Result, error) {
-	p, err := s.snmp.Get(oids)
+	p, err := s.GoSNMP.Get(oids)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +52,7 @@ func (s *SNMP) GetAll(oids []string) ([]Result, error) {
 
 func (s *SNMP) GetNext(oid string) (Result, error) {
 	oids := []string{oid}
-	p, err := s.snmp.GetNext(oids)
+	p, err := s.GoSNMP.GetNext(oids)
 	if err != nil {
 		return Result{}, err
 	}
@@ -68,7 +60,7 @@ func (s *SNMP) GetNext(oid string) (Result, error) {
 }
 
 func (s *SNMP) GetNextAll(oids []string) ([]Result, error) {
-	p, err := s.snmp.GetNext(oids)
+	p, err := s.GoSNMP.GetNext(oids)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +68,7 @@ func (s *SNMP) GetNextAll(oids []string) ([]Result, error) {
 }
 
 func (s *SNMP) Walk(oid string) ([]Result, error) {
-	p, err := s.snmp.WalkAll(oid)
+	p, err := s.GoSNMP.WalkAll(oid)
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +77,26 @@ func (s *SNMP) Walk(oid string) ([]Result, error) {
 		result = append(result, Result{Data: pdu})
 	}
 	return result, nil
+}
+
+func (s *SNMP) WalkFunc(oid string, fun gosnmp.WalkFunc) error {
+	return s.GoSNMP.Walk(oid, fun)
+}
+
+func (s *SNMP) BulkWalk(oid string) ([]Result, error) {
+	p, err := s.GoSNMP.BulkWalkAll(oid)
+	if err != nil {
+		return nil, err
+	}
+	var result []Result
+	for _, pdu := range p {
+		result = append(result, Result{Data: pdu})
+	}
+	return result, nil
+}
+
+func (s *SNMP) BulkWalkFunc(oid string, fun gosnmp.WalkFunc) error {
+	return s.GoSNMP.BulkWalk(oid, fun)
 }
 
 // getFirstResultFromPacket 根据 <packet> 获取第一条结果
