@@ -4,12 +4,14 @@ import (
 	"strconv"
 )
 
+// Fetch 根据 <IP> 获取对应交换机的接口信息
 func Fetch(ip string) ([]IfUnit, error) {
 	snmp, err := NewSNMP(ip)
 	if err != nil {
 		return nil, err
 	}
 	defer snmp.Close()
+	// 获取接口数量
 	ifNumber, err := snmp.GetIfNumber()
 	if err != nil {
 		return nil, err

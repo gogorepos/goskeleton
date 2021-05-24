@@ -15,6 +15,9 @@ func (r Result) String() string {
 	if n, ok := r.Value.([]byte); ok {
 		return string(n)
 	}
+	if n, ok := r.Value.(int); ok {
+		return strconv.Itoa(n)
+	}
 	return ""
 }
 

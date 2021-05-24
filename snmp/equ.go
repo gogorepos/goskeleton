@@ -5,11 +5,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type Scheduler interface {
-	Submit(string)
-	ConfigureWorkerChan(chan string)
-}
-
 type EquEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int

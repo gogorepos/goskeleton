@@ -1,5 +1,10 @@
 package snmp
 
+type Scheduler interface {
+	Submit(string)
+	ConfigureWorkerChan(chan string)
+}
+
 type IfUnit struct {
 	ID          string
 	IP          string
