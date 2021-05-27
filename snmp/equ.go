@@ -11,6 +11,7 @@ type EquEngine struct {
 }
 
 type Equ struct {
+	ID   string
 	IP   string
 	Mac  string
 	Type string
@@ -27,6 +28,7 @@ var command = map[string]interface{}{
 	"mac":     "y",
 	"devType": "y",
 	"ip":      "y",
+	"id":      "y",
 	"name":    "y",
 }
 
@@ -82,6 +84,7 @@ func (e *EquEngine) Get() (*Equs, error) {
 		for i, g := range r {
 			mac := g.Get("mac").String()
 			equ := Equ{
+				ID:   g.Get("id").String(),
 				IP:   g.Get("ip").String(),
 				Mac:  mac,
 				Type: g.Get("devType").String(),

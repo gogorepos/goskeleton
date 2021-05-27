@@ -41,6 +41,10 @@ const (
 	IndexLocalIDOid = "1.3.6.1.4.1.3320.127.1.3.7.1.3."
 	// IndexLocalDesOid [Get] 交换机某端口的本地端口描述
 	IndexLocalDesOid = "1.3.6.1.4.1.3320.127.1.3.7.1.4."
+	// IndexLocalOutIndexOid 交换机发送端口统计 TODO: 未证实且未知方法
+	IndexLocalOutIndexOid = "1.3.6.1.4.1.3320.127.1.2.6.1.1"
+	// IndexLocalInIndexOid 交换机接收端口统计 TODO: 未证实且未知方法
+	IndexLocalInIndexOid = "1.3.6.1.4.1.3320.127.1.2.7.1.1"
 )
 
 var OidMap = map[string]string{

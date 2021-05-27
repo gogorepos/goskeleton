@@ -30,13 +30,13 @@ func Run(ips ...string) []byte {
 		for i, unit := range ifUnitSlice {
 			if index, ok := equs.Map[unit.Mac]; ok {
 				e := equs.Data[index]
+				ifUnitSlice[i].ID = e.ID
 				ifUnitSlice[i].IP = e.IP
 				ifUnitSlice[i].Type = e.Type
 				ifUnitSlice[i].Name = e.Name
 			}
 			remoteIP := unit.IP
-			if unit.Type == "switch" && remoteIP != "" &&
-				!connectedIpMap[remoteIP] {
+			if unit.Type == "switch" && remoteIP != "" && !connectedIpMap[remoteIP] {
 				ips = append(ips, remoteIP)
 			}
 		}

@@ -5,6 +5,7 @@ import (
 )
 
 // Fetch 根据 <IP> 获取对应交换机的接口信息
+// TODO: 缺少端口的发送、接收带宽
 func Fetch(ip string) ([]IfUnit, error) {
 	snmp, err := NewSNMP(ip)
 	if err != nil {
@@ -39,6 +40,14 @@ func Fetch(ip string) ([]IfUnit, error) {
 	for i, result := range r {
 		ifUnitSlice[i].Status = result.Int()
 	}
+	// 获取每个接口的带宽
+	r, err = snmp.Walk(IfSpeedOid)
+	if err != nil {
+		return nil, err
+	}
+	for i, result := range r {
+		ifUnitSlice[i].Speed = result.Int()
+	}
 	// 获取端口和其 mac 地址映射表
 	portToMac, err := snmp.GetMacAddress()
 	if err != nil {
@@ -62,6 +71,12 @@ func Fetch(ip string) ([]IfUnit, error) {
 		if err != nil {
 			continue
 		}
+		// 获取本地端口 ID
+		num, err = snmp.Get(IndexLocalIDOid + num.String())
+		if err != nil {
+			continue
+		}
+		id := num.String()
 		// 获取本地端口描述
 		num, err = snmp.Get(IndexLocalDesOid + num.String())
 		if err != nil {
@@ -75,6 +90,7 @@ func Fetch(ip string) ([]IfUnit, error) {
 		if index, ok := ifDescToIndex[description]; ok {
 			ifUnitSlice[index].Type = "switch"
 			ifUnitSlice[index].Name = "Switch"
+			ifUnitSlice[index].ID = id
 			ifUnitSlice[index].IP = num.String()
 		}
 	}

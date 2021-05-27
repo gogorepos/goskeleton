@@ -12,5 +12,6 @@ type IfUnit struct {
 	Type        string
 	Name        string
 	Mac         string
+	Speed       int
 	Status      int
 }
