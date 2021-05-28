@@ -23,9 +23,6 @@ func Fetch(ip string) ([]IfUnit, error) {
 	ifUnitSlice := make([]IfUnit, ifNumber)
 	// 接口描述哈希表 接口描述 ==> 对应接口列表的下标
 	ifDescToIndex := make(map[string]int)
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	getIfUtilization(snmp, ifUnitSlice, &wg)
 	// 获取每个接口的描述
 	r, err := snmp.Walk(IfDescOid)
 	if err != nil {
@@ -108,7 +105,6 @@ func Fetch(ip string) ([]IfUnit, error) {
 			ifUnitSlice[index].IP = num.String()
 		}
 	}
-	wg.Wait()
 	return ifUnitSlice, nil
 }
 
