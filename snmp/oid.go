@@ -11,8 +11,9 @@ const (
 	IfMTUOid = ".1.3.6.1.2.1.2.2.1.4"
 	// IfSpeedOid [Walk] 接口当前宽带 bps
 	IfSpeedOid = ".1.3.6.1.2.1.2.2.1.5"
+	// IfPMacOid [Walk] 接口物理地址
+	IfPMacOid = ".1.3.6.1.2.1.2.2.1.6"
 	// IfMacOid [Walk] 接口的物理地址
-	// IfMacOid = ".1.3.6.1.2.1.2.2.1.6"
 	IfMacOid = "1.3.6.1.2.1.17.4.3.1.1"
 	// IfMacPortOid [BulkWalk] 接口地址对应端口
 	IfMacPortOid = ".1.3.6.1.2.1.17.4.3.1.2"
@@ -41,22 +42,4 @@ const (
 	IndexLocalIDOid = "1.3.6.1.4.1.3320.127.1.3.7.1.3."
 	// IndexLocalDesOid [Get] 交换机某端口的本地端口描述
 	IndexLocalDesOid = "1.3.6.1.4.1.3320.127.1.3.7.1.4."
-	// IndexLocalOutIndexOid 交换机发送端口统计 TODO: 未证实且未知方法
-	IndexLocalOutIndexOid = "1.3.6.1.4.1.3320.127.1.2.6.1.1"
-	// IndexLocalInIndexOid 交换机接收端口统计 TODO: 未证实且未知方法
-	IndexLocalInIndexOid = "1.3.6.1.4.1.3320.127.1.2.7.1.1"
 )
-
-var OidMap = map[string]string{
-	"IfNumberOid":       ".1.3.6.1.2.1.2.1.0",
-	"IfDescOid":         ".1.3.6.1.2.1.2.2.1.2",
-	"IfTypeOid":         ".1.3.6.1.2.1.2.2.1.3",
-	"IfMTUOid":          ".1.3.6.1.2.1.2.2.1.4",
-	"IfSpeedOid":        ".1.3.6.1.2.1.2.2.1.5",
-	"IfMacOid":          ".1.3.6.1.2.1.2.2.1.6",
-	"IfStatusOid":       ".1.3.6.1.2.1.2.2.1.8",
-	"IfInOctetOid":      ".1.3.6.1.2.1.2.2.1.10",
-	"IfOutOctetOid":     ".1.3.6.1.2.1.2.2.1.16",
-	"IfInUcastPktsOid":  ".1.3.6.1.2.1.2.2.1.11",
-	"IfOutUcastPktsOid": ".1.3.6.1.2.1.2.2.1.17",
-}

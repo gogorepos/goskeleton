@@ -22,10 +22,7 @@ func (r Result) String() string {
 }
 
 func (r Result) Int() int {
-	if n, ok := r.Value.(int); ok {
-		return n
-	}
-	return 0
+	return int(gosnmp.ToBigInt(r.Value).Int64())
 }
 
 func (r Result) Uint() uint {

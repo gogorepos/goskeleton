@@ -13,5 +13,7 @@ type IfUnit struct {
 	Name        string
 	Mac         string
 	Speed       int
+	InSpeed     int
+	OutSpeed    int
 	Status      int
 }
